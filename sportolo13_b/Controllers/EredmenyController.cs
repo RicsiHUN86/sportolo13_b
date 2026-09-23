@@ -90,5 +90,44 @@ namespace sportolo13_b.Controllers
             connector.Close();
             return updatedE;
         }
+        [HttpDelete]
+        public object Delete(int id)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var sql = "DELETE FROM `eredmeny` WHERE Id=@id;";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return new { message = "Eredmény sikeresen törölve" };
+        }
+        [HttpGet("byId")]
+        public object GetById(int id)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var sql = "SELECT * FROM eredmeny WHERE Id=@id;";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            var dataReader = cmd.ExecuteReader();
+            dataReader.Read();
+
+            var eredmeny = new Eredmeny
+            {
+                Id = dataReader.GetInt32(0),
+                Competition = dataReader.GetString(1),
+                Description = dataReader.GetString(2),
+                ResultTime = dataReader.GetDateTime(3),
+                UpdateTime = dataReader.GetDateTime(4),
+                SportoloId = dataReader.GetInt32(5)
+            };
+
+            connector.Close();
+            return eredmeny;
+        }
     }
 }
