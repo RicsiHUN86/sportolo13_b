@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using sportolo13_b.Models;
+using sportolo13_b.Models.DTOs;
 
 namespace sportolo13_b.Controllers
 {
@@ -38,5 +39,6 @@ namespace sportolo13_b.Controllers
             connector.Close();
             return eredmenyek;
         }
+        
     }
 }
