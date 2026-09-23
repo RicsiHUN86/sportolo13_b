@@ -40,6 +40,33 @@ namespace sportolo13_b.Controllers
             return sportolok;
         }
 
+        [HttpPost]
+        public Sportolo AddNewSportolo(AddSportoloDTO sportolo)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var newS = new Sportolo
+            {
+                Name = sportolo.Name,
+                Email = sportolo.Email,
+                Age = sportolo.Age,
+                Password = sportolo.Password,
+                RegistrationTime = DateTime.Now
+            };
+
+            var sql = "INSERT INTO `sportolo`(`name`, `email`, `age`, `password`, `registrationTime`) VALUES (@name, @email, @age, @password, @registrationtime)";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@name", newS.Name);
+            cmd.Parameters.AddWithValue("@email", newS.Email);
+            cmd.Parameters.AddWithValue("@age", newS.Age);
+            cmd.Parameters.AddWithValue("@password", newS.Password);
+            cmd.Parameters.AddWithValue("@registrationtime", newS.RegistrationTime);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return newS;
+        }
+
         
     }
 }
