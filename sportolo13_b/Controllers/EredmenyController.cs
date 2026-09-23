@@ -39,6 +39,56 @@ namespace sportolo13_b.Controllers
             connector.Close();
             return eredmenyek;
         }
-        
+        [HttpPost]
+        public Eredmeny AddNewEredmeny(AddEredmenyDTO eredmeny)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var newE = new Eredmeny
+            {
+                Competition = eredmeny.Competition,
+                Description = eredmeny.Description,
+                ResultTime = DateTime.Now,
+                UpdateTime = DateTime.Now,
+                SportoloId = eredmeny.SportoloId
+            };
+
+            var sql = "INSERT INTO `eredmeny`(`Competition`, `Description`, `ResultTime`, `UpdateTime`, `SportoloId`) VALUES (@competition,@description,@resulttime,@updatetime,@sportoloid)";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@competition", newE.Competition);
+            cmd.Parameters.AddWithValue("@description", newE.Description);
+            cmd.Parameters.AddWithValue("@resulttime", newE.ResultTime);
+            cmd.Parameters.AddWithValue("@updatetime", newE.UpdateTime);
+            cmd.Parameters.AddWithValue("@sportoloid", newE.SportoloId);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return newE;
+        }
+        [HttpPut]
+        public Eredmeny Update([FromQuery] int id, [FromBody] UpdateEredmenyDTO eredmeny)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var updatedE = new Eredmeny
+            {
+                Competition = eredmeny.Competition,
+                Description = eredmeny.Description,
+                UpdateTime = DateTime.Now,
+                SportoloId = eredmeny.SportoloId
+            };
+
+            string sql = "UPDATE `eredmeny` SET `Competition`=@competition,`Description`=@description,`UpdateTime`=@updatetime,`SportoloId`=@sportoloid WHERE Id=@id;";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@competition", updatedE.Competition);
+            cmd.Parameters.AddWithValue("@description", updatedE.Description);
+            cmd.Parameters.AddWithValue("@updatetime", updatedE.UpdateTime);
+            cmd.Parameters.AddWithValue("@sportoloid", updatedE.SportoloId);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return updatedE;
+        }
     }
 }
