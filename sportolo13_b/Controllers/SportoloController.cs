@@ -91,6 +91,40 @@ namespace sportolo13_b.Controllers
             connector.Close();
             return updatedS;
         }
+        [HttpDelete]
+        public bool DeleteSportolo(int id)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
 
+            string sql = "DELETE FROM `sportolo` WHERE id=@id";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@id", id);
+            var result = cmd.ExecuteNonQuery();
+            connector.Close();
+            return result > 0;
+        }
+        [HttpGet("sportoloInfoById")]
+        public object GetSportoloInfo(int sportoloId)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var sql = "SELECT name, email FROM sportolo WHERE Id=@id;";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@id", sportoloId);
+
+            var dataReader = cmd.ExecuteReader();
+            dataReader.Read();
+
+            var sportoloInfo = new
+            {
+                Name = dataReader.GetString(0),
+                Email = dataReader.GetString(1)
+            };
+
+            connector.Close();
+            return sportoloInfo;
+        }
     }
 }
