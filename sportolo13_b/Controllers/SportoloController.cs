@@ -126,5 +126,18 @@ namespace sportolo13_b.Controllers
             connector.Close();
             return sportoloInfo;
         }
+        [HttpGet("OsszesEredmeny")]
+        public object GetOsszesEredmeny()
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+
+            var sql = "SELECT COUNT(*) FROM eredmeny;";
+            var cmd = new MySqlCommand(sql, connector);
+            var osszes = cmd.ExecuteScalar();
+
+            connector.Close();
+            return new { message = $"Összes eredmény: {osszes}" };
+        }
     }
 }
