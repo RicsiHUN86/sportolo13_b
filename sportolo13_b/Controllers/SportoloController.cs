@@ -66,7 +66,31 @@ namespace sportolo13_b.Controllers
             connector.Close();
             return newS;
         }
+        [HttpPut]
+        public Sportolo UpdateSportolo(int id, [FromBody] UpdateSportoloDTO sportolo)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
 
-        
+            var updatedS = new Sportolo
+            {
+                Name = sportolo.Name,
+                Email = sportolo.Email,
+                Age = sportolo.Age,
+                Password = sportolo.Password
+            };
+
+            string sql = "UPDATE `sportolo` SET `name`=@name, `email`=@email, `age`=@age, `password`=@password WHERE id=@id";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@name", updatedS.Name);
+            cmd.Parameters.AddWithValue("@email", updatedS.Email);
+            cmd.Parameters.AddWithValue("@age", updatedS.Age);
+            cmd.Parameters.AddWithValue("@password", updatedS.Password);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return updatedS;
+        }
+
     }
 }
